@@ -39,7 +39,7 @@ app.post('/testapi', (req: Request, res: Response) => {
 })
 
 app.post('/api/sendemailcode', async (req: Request, response: Response) => {
-    const { email } = JSON.parse(req.body)
+    const { email } = req.body
     
     const token = uuidv4()
     const database = await client.db('cluster0')
@@ -76,7 +76,7 @@ app.post('/api/sendemailcode', async (req: Request, response: Response) => {
 })
 
 app.post('/api/verifyToken', async (req, res) => {
-    const { token } = JSON.parse(req.body)
+    const { token } = req.body
 
     const database = await client.db('cluster0')
     const collection = await database.collection('users')
@@ -96,7 +96,7 @@ app.post('/api/verifyToken', async (req, res) => {
 })
 
 app.post('/api/createBill', async (req, res) => {
-    const { title, price } = JSON.parse(req.body)
+    const { title, price } = req.body
 
     console.log(title, price)
 
@@ -127,7 +127,7 @@ app.post('/api/createBill', async (req, res) => {
 })
 
 app.post('/api/checkPayment', async (req, res) => {
-    const { paymentToken, email, lesson } = JSON.parse(req.body)
+    const { paymentToken, email, lesson } = req.body
 
     const database = await client.db('cluster0')
     const collection = await database.collection('payment')
@@ -146,7 +146,10 @@ app.post('/api/checkPayment', async (req, res) => {
 })
 
 app.post('/api/getPaidLessons', async (req, res) => {
-    const { email } = JSON.parse(req.body)
+    console.log(req.body)
+    const { email } = req.body
+
+    console.log(email)
 
     const payments = await Payment.find({ user: email, 'payment.paid': true }).exec()
     const lessons = payments.map((payment) => ({
@@ -165,7 +168,7 @@ app.post('/api/getPaidLessons', async (req, res) => {
 })
 
 app.post('/api/createCourseProgress', async (req, res) => {
-    const { email, lessonTitle } = JSON.parse(req.body)
+    const { email, lessonTitle } = req.body
 
     const newTask = new TaskProgress({
         user: email,
@@ -178,7 +181,7 @@ app.post('/api/createCourseProgress', async (req, res) => {
 })
 
 app.post('/api/addTaskToCourse', async (req, res) => {
-    const { id, mark, isDone, email, lessonTitle } = JSON.parse(req.body)
+    const { id, mark, isDone, email, lessonTitle } = req.body
 
     const newMark = new TaskMark({
         id,
@@ -196,7 +199,7 @@ app.post('/api/addTaskToCourse', async (req, res) => {
 })
 
 app.post('/api/getCourseProgress', async (req, res) => {
-    const { email, lessonTitle } = JSON.parse(req.body)
+    const { email, lessonTitle } = req.body
 
     const course = await TaskProgress.find({ user: email, title: lessonTitle })
 
@@ -204,7 +207,7 @@ app.post('/api/getCourseProgress', async (req, res) => {
 })
 
 app.delete('/api/removeAllCourseTasks', async (req, res) => {
-    const { email, lessonTitle } = JSON.parse(req.body)
+    const { email, lessonTitle } = req.body
 
     console.log(email)
     console.log(lessonTitle)
